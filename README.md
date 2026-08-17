@@ -1,8 +1,21 @@
 # To Do
 
+**[▶ Try it here](https://fionalimaddvita.github.io/todo/)** — no install, runs in
+your browser.
+
 A local to-do board. Tasks live in **SQLite** (`todo.db`), served by a small
 Python script that needs nothing installed — `sqlite3` and `http.server` are
 both in the standard library.
+
+> The link above is a demo of the same interface that saves into browser storage,
+> so it can be hosted as a static page. Run it properly (below) and every change
+> goes to SQLite instead.
+
+## What it looks like
+
+Lists are coloured "lines"; each task is a stop on a spine that shifts hue
+between them. Deadlines read like a departure board, overdue in red. Locations
+open a map over the board. A farm frames the whole thing.
 
 ## Running it
 
