@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Import old tasks</title>
+<style>
+  :root {
+    --ground: #EDEFF4; --card: #FFFFFF; --ink: #111318; --ink-soft: #666E7D;
+    --rule: #E2E5EC; --good: #00A03C; --bad: #E01030; --on: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #090B10; --card: #14171E; --ink: #EDEFF4; --ink-soft: #8B93A4;
+      --rule: #242833; --good: #35C46A; --bad: #FF5A6E; --on: #061018;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #090B10; --card: #14171E; --ink: #EDEFF4; --ink-soft: #8B93A4;
+    --rule: #242833; --good: #35C46A; --bad: #FF5A6E; --on: #061018;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 60px 20px; min-height: 100vh;
+    background: var(--ground); color: var(--ink);
+    font: 16px/1.6 Corbel, Candara, "Segoe UI", system-ui, sans-serif;
+  }
+  main { max-width: 560px; margin: 0 auto; padding: 30px 32px 34px; background: var(--card); box-shadow: 0 24px 50px -34px rgba(0,0,0,.5); }
+  h1 {
+    margin: 0 0 6px; font-family: Bahnschrift, "Segoe UI", sans-serif;
+    font-size: 22px; font-weight: 700; font-stretch: 75%;
+    letter-spacing: .1em; text-transform: uppercase;
+  }
+  p { margin: 0 0 16px; color: var(--ink-soft); }
+  .found { padding: 14px 16px; margin-bottom: 18px; border: 1px solid var(--rule); }
+  .found b { color: var(--ink); }
+  button {
+    padding: 10px 20px; font: inherit; font-size: 14px; color: var(--on);
+    background: var(--ink); border: none; border-radius: 999px; cursor: pointer;
+  }
+  button[disabled] { opacity: .4; cursor: default; }
+  .word { margin-top: 18px; font-weight: 700; }
+  .ok { color: var(--good); }
+  .no { color: var(--bad); }
+  code { font-family: "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Import old tasks</h1>
+  <p>
+    The first version of this app saved tasks inside your browser. This page copies
+    them into the SQLite database once, so nothing is lost. Run it once and you can
+    delete this file.
+  </p>
+
+  <div class="found" id="found">Looking…</div>
+
+  <p>Start the server first — <code>python server.py</code> in the todo folder — then:</p>
+  <button id="go" disabled>Import into SQLite</button>
+
+  <p class="word" id="word"></p>
+</main>
+
+<script>
+(function () {
+  var API = 'http://localhost:8787/api/import';
+  var found = document.getElementById('found');
+  var go = document.getElementById('go');
+  var word = document.getElementById('word');
+  var payload = null;
+
+  function read() {
+    try {
+      var raw = localStorage.getItem('fiona.todo.v2');
+      if (raw) {
+        var s = JSON.parse(raw);
+        if (s && Array.isArray(s.lists) && Array.isArray(s.todos) && s.todos.length) return s;
+      }
+      var old = localStorage.getItem('fiona.todo.v1');
+      if (old) {
+        var prev = JSON.parse(old);
+        if (Array.isArray(prev) && prev.length) {
+          return {
+            lists: [{ id: 0, name: 'General', ink: 5 }],
+            todos: prev.map(function (t) {
+              return { id: t.id, text: t.text, done: !!t.done, due: null, place: null, list: 0 };
+            })
+          };
+        }
+      }
+    } catch (e) { /* nothing usable */ }
+    return null;
+  }
+
+  payload = read();
+
+  if (!payload) {
+    found.textContent = 'No saved tasks found in this browser. Nothing to import.';
+  } else {
+    found.innerHTML = 'Found <b>' + payload.todos.length + '</b> task' +
+      (payload.todos.length === 1 ? '' : 's') + ' across <b>' +
+      payload.lists.length + '</b> list' + (payload.lists.length === 1 ? '' : 's') + '.';
+    go.disabled = false;
+  }
+
+  go.addEventListener('click', function () {
+    go.disabled = true;
+    word.textContent = 'Importing…';
+    word.className = 'word';
+
+    fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) {
+        return res.json().then(function (data) {
+          if (!res.ok) throw new Error(data.error || ('server said ' + res.status));
+          return data;
+        });
+      })
+      .then(function (data) {
+        word.textContent = 'Imported ' + data.imported + ' task' +
+          (data.imported === 1 ? '' : 's') + '. Open http://localhost:8787/ to see them.';
+        word.className = 'word ok';
+      })
+      .catch(function (err) {
+        word.textContent = 'Import failed — ' + err.message + '.';
+        word.className = 'word no';
+        go.disabled = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# Your tasks. Personal data — never commit this.
+todo.db
+todo.db-wal
+todo.db-shm
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

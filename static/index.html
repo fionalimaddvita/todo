@@ -1,0 +1,1671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>To Do</title>
+<style>
+  /* ================================================================
+     Tokens — light (bare :root carries the complete palette)
+     Eight line hues, full saturation. Red is deliberately absent from
+     them: it belongs to overdue items and nothing else.
+     ================================================================ */
+  :root {
+    --card:      #FFFFFF;
+    --rule:      #E2E5EC;
+    --rule-firm: #C4C9D4;
+    --ink:       #111318;
+    --ink-soft:  #666E7D;
+    --ink-faint: #9AA1AF;
+    --lift:      0 26px 54px -30px rgba(17, 19, 24, .45);
+
+    --c1: #FF6A13;  --c1-on: #241000;
+    --c2: #F2B300;  --c2-on: #2A1D00;
+    --c3: #7AB800;  --c3-on: #142000;
+    --c4: #00A03C;  --c4-on: #04180B;
+    --c5: #00A9CE;  --c5-on: #001A20;
+    --c6: #0A5AE0;  --c6-on: #FFFFFF;
+    --c7: #7B2FF2;  --c7-on: #FFFFFF;
+    --c8: #EE1D8F;  --c8-on: #FFFFFF;
+
+    --alert:    #E01030;
+    --alert-on: #FFFFFF;
+
+    /* ---- The farm, kept soft so the lines stay the loudest thing ---- */
+    --sky:      #DCEDF8;
+    --meadow:   #CDE5BE;
+    --orb:      #FFD86B;
+    --star:     transparent;
+    --cloud:    #FFFFFF;
+    --bird:     #93A9C0;
+    --post:     #E3D2B3;
+    --post-dk:  #C4AA7E;
+    --grass:    #8DC57A;
+    --grass-dk: #6FAE5C;
+    --petal:    #F7C948;
+    --seed:     #8A6A34;
+    --wool:     #FFFDF7;
+    --hide:     #FFFFFF;
+    --spot:     #4C4A47;
+    --pig:      #F5B3C1;
+    --pig-dk:   #E28FA2;
+    --beak:     #FF9F1C;
+    --comb:     #E8455F;
+
+    --spine: 36px;
+    --time: 78px;
+    --gap: 12px;
+  }
+
+  /* System dark, unless the viewer explicitly chose light */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --card:      #14171E;
+      --rule:      #242833;
+      --rule-firm: #3A404F;
+      --ink:       #EDEFF4;
+      --ink-soft:  #8B93A4;
+      --ink-faint: #5A6172;
+      --lift:      0 26px 54px -26px rgba(0, 0, 0, .9);
+
+      --c1: #FF9147;  --c1-on: #200C00;
+      --c2: #FFC93D;  --c2-on: #241900;
+      --c3: #A8DE3A;  --c3-on: #182300;
+      --c4: #35C46A;  --c4-on: #002711;
+      --c5: #45CBEA;  --c5-on: #00222B;
+      --c6: #5B92FF;  --c6-on: #001233;
+      --c7: #A96BFF;  --c7-on: #170036;
+      --c8: #FF5FB4;  --c8-on: #2E0018;
+
+      --alert:    #FF5A6E;
+      --alert-on: #2B0009;
+
+      --sky:      #0D1424;
+      --meadow:   #14251C;
+      --orb:      #E4EAF6;
+      --star:     #C9D6EE;
+      --cloud:    #22304A;
+      --bird:     #4C5F7E;
+      --post:     #4A3F2C;
+      --post-dk:  #352D1F;
+      --grass:    #2E6B3C;
+      --grass-dk: #22522E;
+      --petal:    #C9A33C;
+      --seed:     #6B5227;
+      --wool:     #DAD4C6;
+      --hide:     #C9CBD0;
+      --spot:     #3A3A38;
+      --pig:      #C98899;
+      --pig-dk:   #A96C7D;
+      --beak:     #D9812A;
+      --comb:     #B33A50;
+    }
+  }
+
+  /* Explicit dark choice wins over a light OS */
+  :root[data-theme="dark"] {
+    --card:      #14171E;
+    --rule:      #242833;
+    --rule-firm: #3A404F;
+    --ink:       #EDEFF4;
+    --ink-soft:  #8B93A4;
+    --ink-faint: #5A6172;
+    --lift:      0 26px 54px -26px rgba(0, 0, 0, .9);
+
+    --c1: #FF9147;  --c1-on: #200C00;
+    --c2: #FFC93D;  --c2-on: #241900;
+    --c3: #A8DE3A;  --c3-on: #182300;
+    --c4: #35C46A;  --c4-on: #002711;
+    --c5: #45CBEA;  --c5-on: #00222B;
+    --c6: #5B92FF;  --c6-on: #001233;
+    --c7: #A96BFF;  --c7-on: #170036;
+    --c8: #FF5FB4;  --c8-on: #2E0018;
+
+    --alert:    #FF5A6E;
+    --alert-on: #2B0009;
+
+    --sky:      #0D1424;
+    --meadow:   #14251C;
+    --orb:      #E4EAF6;
+    --star:     #C9D6EE;
+    --cloud:    #22304A;
+    --bird:     #4C5F7E;
+    --post:     #4A3F2C;
+    --post-dk:  #352D1F;
+    --grass:    #2E6B3C;
+    --grass-dk: #22522E;
+    --petal:    #C9A33C;
+    --seed:     #6B5227;
+    --wool:     #DAD4C6;
+    --hide:     #C9CBD0;
+    --spot:     #3A3A38;
+    --pig:      #C98899;
+    --pig-dk:   #A96C7D;
+    --beak:     #D9812A;
+    --comb:     #B33A50;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--sky);
+    background-image: linear-gradient(to bottom, var(--sky) 0%, var(--sky) 34%, var(--meadow) 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font: 16px/1.5 Corbel, Candara, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ================================================================
+     The yard: farm decoration frames the board and never overlaps it
+     ================================================================ */
+  .yard {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 96px 66px 150px;
+  }
+
+  .deco {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .deco-sky    { top: 8px; left: 0; right: 0; height: 88px; }
+  .deco-side   { top: 104px; bottom: 138px; width: 46px; }
+  .deco-left   { left: 8px; }
+  .deco-right  { right: 8px; transform: scaleX(-1); }
+  .deco-fence  { left: 0; right: 0; bottom: 46px; height: 66px; }
+  .deco-grass  { left: 0; right: 0; bottom: 30px; height: 26px; }
+  .deco-stock  { left: 0; right: 0; bottom: 62px; height: 58px; }
+
+  .deco svg { display: block; width: 100%; height: 100%; }
+
+  .critter {
+    position: absolute;
+    bottom: 0;
+    height: 52px;
+  }
+
+  .critter svg { height: 100%; width: auto; }
+
+  .critter-sheep   { left: 5%;  height: 46px; }
+  .critter-cow     { left: 26%; height: 54px; }
+  .critter-pig     { left: 49%; height: 44px; }
+  .critter-hen     { left: 69%; height: 36px; }
+  .critter-duck    { left: 85%; height: 34px; }
+
+  /* ================================================================
+     The board
+     ================================================================ */
+  .board {
+    position: relative;
+    z-index: 1;
+    max-width: 660px;
+    margin: 0 auto;
+    background: var(--card);
+    border-radius: 4px;
+    box-shadow: var(--lift);
+  }
+
+  .strip {
+    margin: 0;
+    padding: 9px 22px;
+    font-size: 13px;
+    color: var(--alert-on);
+    background: var(--alert);
+  }
+
+  .header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 22px 16px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h1 {
+    margin: 0;
+    font-family: Bahnschrift, "DIN Alternate", "Segoe UI", system-ui, sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    font-stretch: 75%;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .service {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0;
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .service b { color: var(--ink); }
+
+  .service .delayed {
+    padding: 2px 7px;
+    font-weight: 700;
+    color: var(--alert-on);
+    background: var(--alert);
+  }
+
+  /* ---- Line badges ---- */
+  .lines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .badge {
+    --hue: var(--rule-firm);
+    --hue-on: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 11px;
+    font-family: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    font-stretch: 75%;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: none;
+    border: 2px solid var(--hue);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .18s ease, color .18s ease;
+  }
+
+  .badge:hover { color: var(--ink); }
+
+  .badge[aria-pressed="true"] {
+    color: var(--hue-on);
+    background: var(--hue);
+  }
+
+  .badge .load {
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 10.5px;
+    font-weight: 400;
+    opacity: .75;
+  }
+
+  .badge .drop {
+    margin: -1px -5px -1px 0;
+    padding: 0 3px;
+    font-size: 14px;
+    line-height: 1;
+    opacity: .6;
+  }
+
+  .badge .drop:hover { opacity: 1; }
+  .badge-new { border-style: dashed; color: var(--ink-faint); }
+
+  #name-box {
+    width: 130px;
+    padding: 5px 11px;
+    font-family: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    font-size: 12.5px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--card);
+    border: 2px solid var(--rule-firm);
+    border-radius: 999px;
+  }
+
+  /* ---- Route ---- */
+  ol { list-style: none; margin: 0; padding: 0; }
+
+  .stop-row,
+  .entry {
+    display: grid;
+    grid-template-columns: var(--spine) var(--time) 1fr auto;
+    column-gap: var(--gap);
+    align-items: center;
+    min-height: 54px;
+    padding-right: 16px;
+  }
+
+  /* The spine: one continuous line whose hue shifts as it passes each stop */
+  .spine {
+    position: relative;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spine::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, var(--prev), var(--hue) 50%, var(--next));
+  }
+
+  .stop-row:first-child .spine::before { top: 50%; }
+
+  .entry .spine::before {
+    bottom: 50%;
+    background: repeating-linear-gradient(
+      to bottom, var(--hue) 0 5px, transparent 5px 10px
+    );
+  }
+
+  .stop {
+    position: relative;
+    z-index: 1;
+    width: 17px;
+    height: 17px;
+    padding: 0;
+    background: var(--card);
+    border: 3px solid var(--hue);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: border-color .3s ease;
+  }
+
+  .stop::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: var(--hue);
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform .32s cubic-bezier(.34, 1.7, .5, 1);
+  }
+
+  .done .stop::after { transform: scale(1); }
+  .stop:hover { border-color: var(--ink); }
+
+  .entry .stop { border-style: dashed; cursor: default; }
+
+  .time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+    padding: 6px 0;
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 11.5px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    text-align: right;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .time:hover { color: var(--ink); }
+  .time.today { color: var(--ink); font-weight: 700; }
+  .time.soon { color: var(--ink); }
+  .time.none { color: var(--ink-faint); }
+  .time.late { color: var(--alert); font-weight: 700; }
+
+  .time .delay {
+    font-size: 9.5px;
+    font-weight: 400;
+    letter-spacing: .04em;
+    color: var(--alert);
+  }
+
+  .done .time, .done .time.late { color: var(--ink-faint); font-weight: 400; }
+  .done .time .delay { display: none; }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    padding: 8px 0;
+    min-width: 0;
+  }
+
+  .label {
+    overflow-wrap: anywhere;
+    cursor: pointer;
+    transition: color .3s ease;
+  }
+
+  .done .label {
+    color: var(--ink-faint);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+
+  /* ---- Where it happens ---- */
+  .place {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 100%;
+    padding: 1px 0;
+    font: inherit;
+    font-size: 12.5px;
+    text-align: left;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .place:hover { color: var(--hue); }
+  .place span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .place svg {
+    width: 11px;
+    height: 13px;
+    flex: none;
+    fill: currentColor;
+  }
+
+  .place.unset {
+    color: var(--ink-faint);
+    opacity: 0;
+    transition: opacity .15s ease;
+  }
+
+  .stop-row:hover .place.unset,
+  .stop-row:focus-within .place.unset { opacity: 1; }
+
+  .done .place { color: var(--ink-faint); }
+
+  .place-edit {
+    width: 100%;
+    max-width: 260px;
+    padding: 1px 0;
+    font: inherit;
+    font-size: 12.5px;
+    color: var(--ink);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--hue);
+  }
+
+  /* ---- Map ---- */
+  #map-card {
+    width: min(560px, 92vw);
+    padding: 0;
+    color: var(--ink);
+    background: var(--card);
+    border: none;
+    border-radius: 4px;
+    box-shadow: var(--lift);
+  }
+
+  #map-card::backdrop { background: rgba(8, 12, 18, .58); }
+
+  .map-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 15px 18px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .map-title {
+    margin: 0;
+    font-family: Bahnschrift, "DIN Alternate", "Segoe UI", system-ui, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    font-stretch: 75%;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+
+  #map-name {
+    flex: 1;
+    min-width: 0;
+    padding: 3px 6px;
+    font: inherit;
+    color: var(--ink);
+    background: none;
+    border: 1px solid var(--rule-firm);
+    border-radius: 3px;
+  }
+
+  .map-close {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    font-size: 19px;
+    line-height: 1;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .map-close:hover { color: var(--ink); }
+
+  #map-frame {
+    display: block;
+    width: 100%;
+    height: 330px;
+    border: 0;
+    background: var(--rule);
+  }
+
+  .map-offline {
+    padding: 44px 20px;
+    text-align: center;
+    color: var(--ink-soft);
+    background: var(--rule);
+  }
+
+  .map-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 18px;
+    flex-wrap: wrap;
+  }
+
+  .map-go {
+    padding: 7px 14px;
+    font-family: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    font-stretch: 75%;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--card);
+    background: var(--ink);
+    border-radius: 999px;
+  }
+
+  .map-side { display: flex; gap: 14px; }
+
+  .map-side button {
+    padding: 0;
+    font: inherit;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .map-side button:hover { color: var(--ink); }
+  .map-side .remove:hover { color: var(--alert); }
+
+  .drop-stop {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 17px;
+    line-height: 1;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s ease, color .15s ease;
+  }
+
+  .stop-row:hover .drop-stop,
+  .stop-row:focus-within .drop-stop { opacity: 1; }
+  .drop-stop:hover { color: var(--alert); }
+
+  /* ---- Next item ---- */
+  .entry {
+    grid-template-columns: var(--spine) var(--time) 1fr auto auto;
+    grid-template-areas:
+      "lead due   task  list  add"
+      "lead place place place place";
+    row-gap: 3px;
+    padding-top: 8px;
+    padding-bottom: 12px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .entry .spine { grid-area: lead; }
+  #due-box   { grid-area: due; }
+  #task-box  { grid-area: task; }
+  #line-box  { grid-area: list; }
+  #add-btn   { grid-area: add; }
+  #place-box { grid-area: place; }
+
+  #place-box {
+    width: 100%;
+    max-width: 280px;
+    padding: 2px 0;
+    font: inherit;
+    font-size: 12.5px;
+    color: var(--ink);
+    background: none;
+    border: none;
+  }
+
+  #place-box::placeholder { color: var(--ink-faint); }
+
+  #due-box {
+    justify-self: end;
+    width: 100%;
+    padding: 4px;
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-size: 10.5px;
+    text-align: right;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    border-bottom: 1px dashed var(--rule-firm);
+    cursor: pointer;
+  }
+
+  #due-box:hover, #due-box:focus { color: var(--ink); border-bottom-style: solid; }
+
+  #task-box {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 0;
+    font: inherit;
+    color: var(--ink);
+    background: none;
+    border: none;
+  }
+
+  #task-box::placeholder { color: var(--ink-faint); }
+
+  #line-box {
+    max-width: 132px;
+    padding: 4px 7px;
+    font-family: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    font-size: 11.5px;
+    font-stretch: 75%;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--hue-on);
+    background: var(--hue);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  #add-btn {
+    padding: 6px 12px;
+    font-family: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    font-stretch: 75%;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--card);
+    background: var(--ink);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease;
+  }
+
+  .entry.ready #add-btn { opacity: 1; pointer-events: auto; }
+
+  #blank {
+    margin: 0;
+    padding: 26px 16px 26px calc(var(--spine) + var(--gap));
+    color: var(--ink-faint);
+  }
+
+  :is(button, input, select):focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  /* ---- Motion ---- */
+  .drawing .stop-row {
+    animation: arrive .42s cubic-bezier(.2, .7, .3, 1) both;
+    animation-delay: calc(var(--i) * 45ms);
+  }
+
+  @keyframes arrive {
+    from { opacity: 0; transform: translateY(-9px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .new-stop { animation: arrive .34s cubic-bezier(.2, .7, .3, 1) both; }
+
+  .cloud-a { animation: drift 34s ease-in-out infinite alternate; }
+  .cloud-b { animation: drift 46s ease-in-out infinite alternate-reverse; }
+
+  @keyframes drift {
+    from { transform: translateX(-10px); }
+    to   { transform: translateX(14px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stop, .stop::after, .badge, .label { transition: none; }
+    .drawing .stop-row, .new-stop, .cloud-a, .cloud-b { animation: none; }
+  }
+
+  @media (max-width: 720px) {
+    .yard { padding: 74px 30px 132px; }
+    .deco-side { display: none; }
+    .critter-cow { left: 30%; }
+    .critter-hen { left: 72%; }
+  }
+
+  @media (max-width: 560px) {
+    :root { --spine: 28px; --time: 62px; --gap: 9px; }
+    .yard { padding: 62px 12px 120px; }
+    .header, .lines { padding-left: 14px; padding-right: 14px; }
+    .stop-row, .entry { padding-right: 10px; }
+    .critter-pig, .critter-duck { display: none; }
+    .critter-sheep { left: 4%; }
+    .critter-cow { left: 40%; }
+    .critter-hen { left: 76%; }
+
+    .place.unset { opacity: 1; }   /* no hover to reveal it on touch */
+
+    .entry {
+      grid-template-columns: var(--spine) var(--time) 1fr;
+      grid-template-areas:
+        "lead due   task"
+        "lead place place"
+        "lead list  add";
+      row-gap: 8px;
+    }
+    #line-box { justify-self: start; }
+    #add-btn  { justify-self: end; }
+  }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="yard">
+
+  <!-- ---------- Sky ---------- -->
+  <div class="deco deco-sky" aria-hidden="true">
+    <svg viewBox="0 0 800 88" preserveAspectRatio="xMidYMid meet">
+      <!-- sun by day, moon by night -->
+      <circle cx="712" cy="34" r="22" fill="var(--orb)"/>
+      <g fill="var(--star)">
+        <circle cx="640" cy="18" r="1.8"/><circle cx="672" cy="58" r="1.4"/>
+        <circle cx="596" cy="40" r="1.6"/><circle cx="748" cy="66" r="1.5"/>
+        <circle cx="88"  cy="22" r="1.7"/><circle cx="150" cy="52" r="1.3"/>
+        <circle cx="300" cy="16" r="1.5"/><circle cx="420" cy="60" r="1.4"/>
+      </g>
+      <g class="cloud-a" fill="var(--cloud)">
+        <ellipse cx="150" cy="44" rx="34" ry="16"/>
+        <ellipse cx="122" cy="50" rx="24" ry="12"/>
+        <ellipse cx="180" cy="52" rx="26" ry="13"/>
+      </g>
+      <g class="cloud-b" fill="var(--cloud)">
+        <ellipse cx="470" cy="30" rx="28" ry="13"/>
+        <ellipse cx="446" cy="36" rx="20" ry="10"/>
+        <ellipse cx="496" cy="37" rx="22" ry="11"/>
+      </g>
+      <g fill="none" stroke="var(--bird)" stroke-width="2.2" stroke-linecap="round">
+        <path d="M300 34 q6 -6 12 0 q6 -6 12 0"/>
+        <path d="M348 54 q5 -5 10 0 q5 -5 10 0"/>
+        <path d="M262 62 q4 -4 8 0 q4 -4 8 0"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ---------- Sunflowers up the sides ---------- -->
+  <div class="deco deco-side deco-left" aria-hidden="true">
+    <svg viewBox="0 0 46 300" preserveAspectRatio="xMinYMax meet">
+      <defs>
+        <pattern id="vines" patternUnits="userSpaceOnUse" width="46" height="150">
+          <path d="M23 150 C 14 112, 32 96, 23 62" stroke="var(--grass-dk)" stroke-width="3" fill="none"/>
+          <path d="M23 118 q-13 -5 -16 -17 q13 1 16 17 z" fill="var(--grass)"/>
+          <path d="M23 96 q13 -5 16 -17 q-13 1 -16 17 z" fill="var(--grass)"/>
+          <g transform="translate(23 50)">
+            <g fill="var(--petal)">
+              <ellipse cx="0" cy="-13" rx="4.5" ry="9"/>
+              <ellipse cx="0" cy="13" rx="4.5" ry="9"/>
+              <ellipse cx="-13" cy="0" rx="9" ry="4.5"/>
+              <ellipse cx="13" cy="0" rx="9" ry="4.5"/>
+              <ellipse cx="-9" cy="-9" rx="8" ry="4.5" transform="rotate(45 -9 -9)"/>
+              <ellipse cx="9" cy="9" rx="8" ry="4.5" transform="rotate(45 9 9)"/>
+              <ellipse cx="9" cy="-9" rx="8" ry="4.5" transform="rotate(-45 9 -9)"/>
+              <ellipse cx="-9" cy="9" rx="8" ry="4.5" transform="rotate(-45 -9 9)"/>
+            </g>
+            <circle r="7.5" fill="var(--seed)"/>
+          </g>
+          <path d="M23 150 C 30 138, 16 130, 23 118" stroke="var(--grass-dk)" stroke-width="3" fill="none"/>
+        </pattern>
+      </defs>
+      <rect width="46" height="300" fill="url(#vines)"/>
+    </svg>
+  </div>
+
+  <div class="deco deco-side deco-right" aria-hidden="true">
+    <svg viewBox="0 0 46 300" preserveAspectRatio="xMinYMax meet">
+      <rect width="46" height="300" fill="url(#vines)"/>
+    </svg>
+  </div>
+
+  <!-- ---------- Fence ---------- -->
+  <div class="deco deco-fence" aria-hidden="true">
+    <svg viewBox="0 0 800 66" preserveAspectRatio="none">
+      <defs>
+        <pattern id="pickets" patternUnits="userSpaceOnUse" width="50" height="66">
+          <path d="M14 66 V22 L25 10 L36 22 V66 Z" fill="var(--post)" stroke="var(--post-dk)" stroke-width="2"/>
+        </pattern>
+      </defs>
+      <rect y="0" width="800" height="66" fill="url(#pickets)"/>
+      <rect y="26" width="800" height="7" fill="var(--post)" stroke="var(--post-dk)" stroke-width="1.5"/>
+      <rect y="48" width="800" height="7" fill="var(--post)" stroke="var(--post-dk)" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <!-- ---------- Livestock ---------- -->
+  <div class="deco deco-stock" aria-hidden="true">
+    <span class="critter critter-sheep">
+      <svg viewBox="0 0 62 52">
+        <g fill="var(--spot)">
+          <rect x="16" y="34" width="4.5" height="16" rx="2"/>
+          <rect x="26" y="34" width="4.5" height="16" rx="2"/>
+          <rect x="38" y="34" width="4.5" height="16" rx="2"/>
+          <rect x="47" y="34" width="4.5" height="16" rx="2"/>
+        </g>
+        <g fill="var(--wool)">
+          <circle cx="22" cy="26" r="11"/><circle cx="34" cy="22" r="12"/>
+          <circle cx="45" cy="27" r="10"/><circle cx="31" cy="33" r="10"/>
+          <circle cx="42" cy="35" r="8"/>
+        </g>
+        <ellipse cx="14" cy="21" rx="8" ry="7.5" fill="var(--spot)"/>
+        <ellipse cx="6" cy="17" rx="4" ry="2.6" fill="var(--spot)" transform="rotate(-24 6 17)"/>
+        <circle cx="11" cy="19" r="1.5" fill="#fff"/>
+        <circle cx="8.4" cy="24" r="1.1" fill="#fff" opacity=".65"/>
+      </svg>
+    </span>
+
+    <span class="critter critter-cow">
+      <svg viewBox="0 0 74 58">
+        <g fill="var(--spot)">
+          <rect x="20" y="40" width="5" height="17" rx="2.5"/>
+          <rect x="31" y="40" width="5" height="17" rx="2.5"/>
+          <rect x="46" y="40" width="5" height="17" rx="2.5"/>
+          <rect x="56" y="40" width="5" height="17" rx="2.5"/>
+        </g>
+        <path d="M64 22 q7 2 5 12 q-1 5 -4 3" fill="none" stroke="var(--spot)" stroke-width="3" stroke-linecap="round"/>
+        <rect x="16" y="16" width="50" height="28" rx="14" fill="var(--hide)"/>
+        <ellipse cx="32" cy="24" rx="8" ry="6" fill="var(--spot)"/>
+        <ellipse cx="54" cy="34" rx="7" ry="5.5" fill="var(--spot)"/>
+        <circle cx="16" cy="20" r="12" fill="var(--hide)"/>
+        <ellipse cx="4" cy="15" rx="4.5" ry="3" fill="var(--hide)" stroke="var(--spot)" stroke-width="1.4"/>
+        <ellipse cx="12" cy="26" rx="7" ry="5.5" fill="var(--pig)"/>
+        <circle cx="10" cy="26" r="1.2" fill="var(--pig-dk)"/>
+        <circle cx="15" cy="26" r="1.2" fill="var(--pig-dk)"/>
+        <circle cx="15" cy="16" r="1.7" fill="var(--spot)"/>
+        <path d="M9 10 q-2 -4 1 -5" stroke="var(--spot)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+    </span>
+
+    <span class="critter critter-pig">
+      <svg viewBox="0 0 66 48">
+        <g fill="var(--pig-dk)">
+          <rect x="18" y="32" width="5" height="15" rx="2.5"/>
+          <rect x="28" y="32" width="5" height="15" rx="2.5"/>
+          <rect x="42" y="32" width="5" height="15" rx="2.5"/>
+          <rect x="51" y="32" width="5" height="15" rx="2.5"/>
+        </g>
+        <path d="M58 18 q8 0 6 7 q-1 4 -5 2" fill="none" stroke="var(--pig-dk)" stroke-width="2.6" stroke-linecap="round"/>
+        <rect x="14" y="12" width="46" height="24" rx="12" fill="var(--pig)"/>
+        <circle cx="15" cy="18" r="11" fill="var(--pig)"/>
+        <path d="M9 8 L6 0 L16 5 Z" fill="var(--pig-dk)"/>
+        <path d="M20 7 L19 0 L27 5 Z" fill="var(--pig-dk)"/>
+        <ellipse cx="7" cy="23" rx="5.5" ry="4.5" fill="var(--pig-dk)"/>
+        <circle cx="5.6" cy="23" r="1.1" fill="var(--pig)"/>
+        <circle cx="9" cy="23" r="1.1" fill="var(--pig)"/>
+        <circle cx="14" cy="15" r="1.6" fill="var(--spot)"/>
+      </svg>
+    </span>
+
+    <span class="critter critter-hen">
+      <svg viewBox="0 0 48 44">
+        <g stroke="var(--beak)" stroke-width="2.6" stroke-linecap="round">
+          <path d="M20 36 V42 M28 36 V42"/>
+        </g>
+        <path d="M42 14 q10 6 4 16 q-3 5 -6 1" fill="var(--hide)" stroke="var(--post-dk)" stroke-width="1.4"/>
+        <ellipse cx="26" cy="24" rx="15" ry="13" fill="var(--hide)"/>
+        <circle cx="14" cy="14" r="8.5" fill="var(--hide)"/>
+        <path d="M10 6 q3 -5 5 0 q3 -5 5 1 z" fill="var(--comb)"/>
+        <path d="M6 15 L0 17 L6 19 Z" fill="var(--beak)"/>
+        <path d="M11 20 q2 4 4 0 z" fill="var(--comb)"/>
+        <circle cx="12" cy="13" r="1.6" fill="var(--spot)"/>
+        <path d="M22 22 q8 3 10 9" fill="none" stroke="var(--post-dk)" stroke-width="1.4"/>
+      </svg>
+    </span>
+
+    <span class="critter critter-duck">
+      <svg viewBox="0 0 46 40">
+        <g stroke="var(--beak)" stroke-width="2.6" stroke-linecap="round">
+          <path d="M19 32 V38 M26 32 V38"/>
+        </g>
+        <ellipse cx="24" cy="22" rx="15" ry="11" fill="var(--wool)"/>
+        <path d="M36 14 q7 4 4 12" fill="var(--wool)" stroke="var(--post-dk)" stroke-width="1.3"/>
+        <circle cx="13" cy="12" r="7.5" fill="var(--wool)"/>
+        <path d="M6 12 q-6 1 -6 3 q4 2 6 0 z" fill="var(--beak)"/>
+        <circle cx="12" cy="10.5" r="1.5" fill="var(--spot)"/>
+        <path d="M20 20 q7 2 9 7" fill="none" stroke="var(--post-dk)" stroke-width="1.3"/>
+      </svg>
+    </span>
+  </div>
+
+  <!-- ---------- Grass ---------- -->
+  <div class="deco deco-grass" aria-hidden="true">
+    <svg viewBox="0 0 800 26" preserveAspectRatio="none">
+      <defs>
+        <pattern id="turf" patternUnits="userSpaceOnUse" width="40" height="26">
+          <path d="M0 26 q5 -13 9 0 z" fill="var(--grass)"/>
+          <path d="M12 26 q6 -18 12 0 z" fill="var(--grass-dk)"/>
+          <path d="M27 26 q4 -10 8 0 z" fill="var(--grass)"/>
+        </pattern>
+      </defs>
+      <rect width="800" height="26" fill="url(#turf)"/>
+    </svg>
+  </div>
+
+  <!-- ================= The board ================= -->
+  <main class="board">
+    <p class="strip" id="strip" role="status" hidden></p>
+
+    <header class="header">
+      <h1>To Do</h1>
+      <p class="service">
+        <span><b id="count-open">0</b> open</span>
+        <span><b id="count-all">0</b> total</span>
+        <span class="delayed" id="count-late" hidden></span>
+      </p>
+    </header>
+
+    <nav class="lines" id="lines" aria-label="Lists"></nav>
+
+    <div class="route">
+      <ol id="route"></ol>
+      <p id="blank">Nothing here yet. Add your first item below.</p>
+
+      <form class="entry" id="entry">
+        <span class="spine"><span class="stop" aria-hidden="true"></span></span>
+        <input id="due-box" type="date" aria-label="Due date (optional)">
+        <input id="task-box" type="text" placeholder="What needs doing?" autocomplete="off" aria-label="New item" autofocus>
+        <select id="line-box" aria-label="List for the new item"></select>
+        <button type="submit" id="add-btn">Add</button>
+        <input id="place-box" type="text" placeholder="Where? (optional)" autocomplete="off" aria-label="Location (optional)">
+      </form>
+    </div>
+  </main>
+</div>
+
+<dialog id="map-card" aria-labelledby="map-title">
+  <div class="map-head">
+    <h2 class="map-title" id="map-title"></h2>
+    <input id="map-name" type="text" aria-label="Change the location" hidden>
+    <button type="button" class="map-close" id="map-close" aria-label="Close the map">&times;</button>
+  </div>
+
+  <iframe id="map-frame" title="Map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <p class="map-offline" id="map-offline" hidden></p>
+
+  <div class="map-foot">
+    <a class="map-go" id="map-go" href="#" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+    <span class="map-side">
+      <button type="button" id="map-change">Change</button>
+      <button type="button" class="remove" id="map-remove">Remove</button>
+    </span>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  var HUES = 8;
+  var DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  var MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  var NS = 'http://www.w3.org/2000/svg';
+
+  var lines     = document.getElementById('lines');
+  var route     = document.getElementById('route');
+  var blank     = document.getElementById('blank');
+  var entry     = document.getElementById('entry');
+  var lineBox   = document.getElementById('line-box');
+  var taskBox   = document.getElementById('task-box');
+  var dueBox    = document.getElementById('due-box');
+  var placeBox  = document.getElementById('place-box');
+  var countOpen = document.getElementById('count-open');
+  var countAll  = document.getElementById('count-all');
+  var countLate = document.getElementById('count-late');
+
+  var state = { lists: [], todos: [] };   // mirrors the database, filled on boot
+  var filter = null;                      // null = every list
+  var target = null;                      // list a new item joins
+  var justAdded = null;
+  var firstPaint = true;
+
+  // ---- Talking to the server -----------------------------------------------
+  // The page holds a mirror of the database and renders from it. Every change
+  // is written through to SQLite; if a write fails the strip at the top says so
+  // rather than letting the screen quietly drift from what is stored.
+  function api(method, path, body) {
+    return fetch(path, {
+      method: method,
+      headers: body ? { 'Content-Type': 'application/json' } : undefined,
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) throw new Error(data.error || ('server said ' + res.status));
+        return data;
+      });
+    });
+  }
+
+  var strip = document.getElementById('strip');
+
+  function trouble(err) {
+    strip.textContent = 'Not saved — ' + (err && err.message ? err.message : 'the server is not responding') + '.';
+    strip.hidden = false;
+  }
+
+  function settled() { strip.hidden = true; }
+
+  // Write through, then clear the warning. Local state has already been updated.
+  function push(method, path, body) {
+    return api(method, path, body).then(settled, trouble);
+  }
+
+  function cleanDue(v) {
+    return typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null;
+  }
+
+  function cleanPlace(v) {
+    if (typeof v !== 'string') return null;
+    var s = v.trim().slice(0, 200);
+    return s ? s : null;
+  }
+
+  // ---- Dates. Plain YYYY-MM-DD compared at local noon, so a DST shift can
+  // never nudge a deadline across a day boundary. ----------------------------
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  function daysAway(iso) {
+    var a = new Date(iso + 'T12:00:00');
+    var b = new Date(todayISO() + 'T12:00:00');
+    return Math.round((a - b) / 86400000);
+  }
+
+  function whenLabel(iso) {
+    var n = daysAway(iso);
+    var d = new Date(iso + 'T12:00:00');
+    if (n < 0) return d.getDate() + ' ' + MONTHS[d.getMonth()];
+    if (n === 0) return 'TODAY';
+    if (n === 1) return 'TMRW';
+    if (n < 7) return DAYS[d.getDay()];
+    var label = d.getDate() + ' ' + MONTHS[d.getMonth()];
+    return d.getFullYear() === new Date().getFullYear() ? label : label + " '" + pad(d.getFullYear() % 100);
+  }
+
+  function whenClass(iso) {
+    var n = daysAway(iso);
+    if (n < 0) return 'late';
+    if (n === 0) return 'today';
+    if (n <= 3) return 'soon';
+    return '';
+  }
+
+  function isLate(t) { return !t.done && t.due && daysAway(t.due) < 0; }
+
+  // ---- Helpers -------------------------------------------------------------
+  function lineOf(id) {
+    return state.lists.find(function (l) { return l.id === id; });
+  }
+
+  function hue(id) {
+    var l = lineOf(id);
+    return l ? 'var(--c' + l.ink + ')' : 'var(--rule-firm)';
+  }
+
+  function hueOn(id) {
+    var l = lineOf(id);
+    return l ? 'var(--c' + l.ink + '-on)' : 'var(--ink)';
+  }
+
+  // Soonest first, undated behind them, finished at the end.
+  function visible() {
+    var rows = filter === null
+      ? state.todos.slice()
+      : state.todos.filter(function (t) { return t.list === filter; });
+
+    return rows.sort(function (a, b) {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      if (a.due && b.due) return a.due < b.due ? -1 : a.due > b.due ? 1 : a.id - b.id;
+      if (a.due) return -1;
+      if (b.due) return 1;
+      return a.id - b.id;
+    });
+  }
+
+  function openOn(id) {
+    return state.todos.filter(function (t) { return t.list === id && !t.done; }).length;
+  }
+
+  // ---- Line badges ---------------------------------------------------------
+  function badge(label, l, active, load) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'badge';
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
+
+    if (l) {
+      b.style.setProperty('--hue', 'var(--c' + l.ink + ')');
+      b.style.setProperty('--hue-on', 'var(--c' + l.ink + '-on)');
+    }
+
+    b.appendChild(document.createTextNode(label));
+
+    if (load !== undefined) {
+      var n = document.createElement('span');
+      n.className = 'load';
+      n.textContent = load;
+      b.appendChild(n);
+    }
+    return b;
+  }
+
+  function renderLines() {
+    lines.textContent = '';
+
+    var openAll = state.todos.filter(function (t) { return !t.done; }).length;
+    var all = badge('All lists', null, filter === null, openAll);
+    all.addEventListener('click', function () { filter = null; render(); });
+    lines.appendChild(all);
+
+    state.lists.forEach(function (l) {
+      var b = badge(l.name, l, filter === l.id, openOn(l.id));
+      b.title = 'Double-click to rename';
+      b.addEventListener('click', function () {
+        filter = filter === l.id ? null : l.id;
+        target = l.id;
+        render();
+      });
+      b.addEventListener('dblclick', function (e) { e.preventDefault(); rename(l); });
+
+      // Removal is offered only once a list is clear — no silent loss of items
+      var used = state.todos.some(function (t) { return t.list === l.id; });
+      if (!used && state.lists.length > 1) {
+        var drop = document.createElement('span');
+        drop.className = 'drop';
+        drop.textContent = '×';
+        drop.title = 'Delete this list';
+        drop.addEventListener('click', function (e) {
+          e.stopPropagation();
+          state.lists = state.lists.filter(function (x) { return x.id !== l.id; });
+          if (filter === l.id) filter = null;
+          if (target === l.id) target = state.lists[0].id;
+          push('DELETE', '/api/lists/' + l.id);
+          render();
+        });
+        b.appendChild(drop);
+      }
+
+      lines.appendChild(b);
+    });
+
+    var add = badge('+ New list', null, false);
+    add.classList.add('badge-new');
+    add.addEventListener('click', function () { newLine(add); });
+    lines.appendChild(add);
+  }
+
+  function nameField(anchor, value, commit) {
+    var box = document.createElement('input');
+    box.id = 'name-box';
+    box.value = value || '';
+    box.placeholder = 'Name';
+    box.setAttribute('aria-label', 'List name');
+    lines.replaceChild(box, anchor);
+    box.focus();
+    box.select();
+
+    var settled = false;
+    function finish(apply) {
+      if (settled) return;
+      settled = true;
+      if (apply) commit(box.value.trim());
+      render();
+    }
+
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+      if (e.key === 'Escape') finish(false);
+    });
+    box.addEventListener('blur', function () { finish(true); });
+  }
+
+  function newLine(anchor) {
+    nameField(anchor, '', function (name) {
+      if (!name) return;
+      // The database hands back the id, so wait for it before drawing the badge
+      api('POST', '/api/lists', { name: name, ink: (state.lists.length % HUES) + 1 })
+        .then(function (row) {
+          settled();
+          state.lists.push(row);
+          target = row.id;
+          render();
+        }, trouble);
+    });
+  }
+
+  function rename(l) {
+    nameField(lines.children[state.lists.indexOf(l) + 1], l.name, function (name) {
+      if (!name) return;
+      l.name = name;
+      push('PATCH', '/api/lists/' + l.id, { name: name });
+    });
+  }
+
+  // ---- Stops ---------------------------------------------------------------
+  function editDue(todo, anchor) {
+    var box = document.createElement('input');
+    box.type = 'date';
+    box.className = 'time';
+    box.value = todo.due || '';
+    box.setAttribute('aria-label', 'Due date for ' + todo.text);
+    anchor.replaceWith(box);
+    box.focus();
+    if (box.showPicker) { try { box.showPicker(); } catch (e) {} }
+
+    var settled = false;
+    function commit() {
+      if (settled) return;
+      settled = true;
+      todo.due = cleanDue(box.value);   // clearing the field removes the date
+      push('PATCH', '/api/todos/' + todo.id, { due: todo.due });
+      render();
+    }
+
+    box.addEventListener('change', commit);
+    box.addEventListener('blur', commit);
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      if (e.key === 'Escape') { settled = true; render(); }
+    });
+  }
+
+  function timeCell(todo) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'time ' + (todo.due ? whenClass(todo.due) : 'none');
+
+    var when = document.createElement('span');
+    when.textContent = todo.due ? whenLabel(todo.due) : '—';
+    b.appendChild(when);
+
+    if (todo.due && !todo.done && daysAway(todo.due) < 0) {
+      var delay = document.createElement('span');
+      delay.className = 'delay';
+      delay.textContent = -daysAway(todo.due) + 'd late';
+      b.appendChild(delay);
+    }
+
+    b.title = todo.due ? 'Due ' + todo.due + ' — click to change' : 'Set a due date';
+    b.setAttribute('aria-label', todo.due ? 'Due ' + todo.due + ', change it' : 'Set a due date');
+    b.addEventListener('click', function () { editDue(todo, b); });
+    return b;
+  }
+
+  // ---- Where it happens ----------------------------------------------------
+  var mapCard   = document.getElementById('map-card');
+  var mapTitle  = document.getElementById('map-title');
+  var mapName   = document.getElementById('map-name');
+  var mapFrame  = document.getElementById('map-frame');
+  var mapOff    = document.getElementById('map-offline');
+  var mapGo     = document.getElementById('map-go');
+  var mapChange = document.getElementById('map-change');
+  var mapRemove = document.getElementById('map-remove');
+  var showing = null;                       // the item whose map is open
+
+  function pinIcon() {
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 12 15');
+    svg.setAttribute('aria-hidden', 'true');
+    var p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', 'M6 0a6 6 0 0 0-6 6c0 4.2 6 9 6 9s6-4.8 6-9a6 6 0 0 0-6-6zm0 8.2A2.2 2.2 0 1 1 6 3.8a2.2 2.2 0 0 1 0 4.4z');
+    svg.appendChild(p);
+    return svg;
+  }
+
+  function mapsLink(q) {
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+  }
+
+  function mapsEmbed(q) {
+    return 'https://maps.google.com/maps?q=' + encodeURIComponent(q) + '&z=15&output=embed';
+  }
+
+  function paintMap() {
+    if (!showing || !showing.place) return;
+
+    mapTitle.textContent = showing.place;
+    mapTitle.hidden = false;
+    mapName.hidden = true;
+    mapGo.href = mapsLink(showing.place);
+
+    // The map is the one part of this page that needs the network
+    if (navigator.onLine === false) {
+      mapFrame.hidden = true;
+      mapFrame.removeAttribute('src');
+      mapOff.hidden = false;
+      mapOff.textContent = "You're offline, so the map can't load. The location is saved.";
+    } else {
+      mapOff.hidden = true;
+      mapFrame.hidden = false;
+      mapFrame.src = mapsEmbed(showing.place);
+    }
+  }
+
+  function openMap(todo) {
+    showing = todo;
+    paintMap();
+    if (mapCard.showModal) mapCard.showModal();
+    else mapCard.setAttribute('open', '');
+  }
+
+  function closeMap() {
+    mapFrame.removeAttribute('src');       // stop the tiles loading in the background
+    showing = null;
+    if (mapCard.close) mapCard.close();
+    else mapCard.removeAttribute('open');
+  }
+
+  document.getElementById('map-close').addEventListener('click', closeMap);
+  mapCard.addEventListener('close', function () { mapFrame.removeAttribute('src'); showing = null; });
+  mapCard.addEventListener('click', function (e) {
+    if (e.target === mapCard) closeMap();   // click the backdrop to dismiss
+  });
+
+  mapChange.addEventListener('click', function () {
+    if (!showing) return;
+    mapTitle.hidden = true;
+    mapName.hidden = false;
+    mapName.value = showing.place || '';
+    mapName.focus();
+    mapName.select();
+  });
+
+  mapName.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.stopPropagation(); paintMap(); return; }
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    var next = cleanPlace(mapName.value);
+    if (!next) return;                      // clearing is what Remove is for
+    showing.place = next;
+    push('PATCH', '/api/todos/' + showing.id, { place: next });
+    paintMap();
+    render();
+  });
+
+  mapRemove.addEventListener('click', function () {
+    if (!showing) return;
+    showing.place = null;
+    push('PATCH', '/api/todos/' + showing.id, { place: null });
+    closeMap();
+    render();
+  });
+
+  function editPlace(todo, anchor) {
+    var box = document.createElement('input');
+    box.type = 'text';
+    box.className = 'place-edit';
+    box.value = todo.place || '';
+    box.placeholder = 'Where?';
+    box.setAttribute('aria-label', 'Location for ' + todo.text);
+    anchor.replaceWith(box);
+    box.focus();
+    box.select();
+
+    var settled = false;
+    function commit(apply) {
+      if (settled) return;
+      settled = true;
+      if (apply) {
+        todo.place = cleanPlace(box.value);
+        push('PATCH', '/api/todos/' + todo.id, { place: todo.place });
+      }
+      render();
+    }
+
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); commit(true); }
+      if (e.key === 'Escape') commit(false);
+    });
+    box.addEventListener('blur', function () { commit(true); });
+  }
+
+  function placeCell(todo) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'place' + (todo.place ? '' : ' unset');
+    b.appendChild(pinIcon());
+
+    var text = document.createElement('span');
+    text.textContent = todo.place || 'Add a location';
+    b.appendChild(text);
+
+    if (todo.place) {
+      b.title = 'Show ' + todo.place + ' on the map';
+      b.setAttribute('aria-label', 'Show ' + todo.place + ' on the map');
+      b.addEventListener('click', function () { openMap(todo); });
+    } else {
+      b.title = 'Add a location';
+      b.setAttribute('aria-label', 'Add a location to ' + todo.text);
+      b.addEventListener('click', function () { editPlace(todo, b); });
+    }
+    return b;
+  }
+
+  function buildStop(todo, index) {
+    var l = lineOf(todo.list);
+    var li = document.createElement('li');
+    li.className = 'stop-row' + (todo.done ? ' done' : '');
+    li.dataset.id = todo.id;
+    li.style.setProperty('--i', index);
+
+    var spine = document.createElement('span');
+    spine.className = 'spine';
+
+    var stop = document.createElement('button');
+    stop.type = 'button';
+    stop.className = 'stop';
+    stop.setAttribute('role', 'checkbox');
+    stop.setAttribute('aria-checked', todo.done ? 'true' : 'false');
+    stop.setAttribute('aria-label', todo.text + (l ? ' — ' + l.name : ''));
+    stop.addEventListener('click', function () { toggle(todo.id); });
+    spine.appendChild(stop);
+
+    var body = document.createElement('div');
+    body.className = 'body';
+
+    var label = document.createElement('span');
+    label.className = 'label';
+    label.textContent = todo.text;
+    // Naming the list keeps "All lists" readable without relying on colour
+    if (filter === null && l) label.title = l.name;
+    label.addEventListener('click', function () { toggle(todo.id); });
+
+    body.append(label, placeCell(todo));
+
+    var drop = document.createElement('button');
+    drop.type = 'button';
+    drop.className = 'drop-stop';
+    drop.textContent = '×';
+    drop.title = 'Remove this item';
+    drop.setAttribute('aria-label', 'Remove "' + todo.text + '"');
+    drop.addEventListener('click', function () { remove(todo.id); });
+
+    li.append(spine, timeCell(todo), body, drop);
+    return li;
+  }
+
+  // ---- Render --------------------------------------------------------------
+  function renderPicker() {
+    lineBox.textContent = '';
+    state.lists.forEach(function (l) {
+      var opt = document.createElement('option');
+      opt.value = l.id;
+      opt.textContent = l.name;
+      lineBox.appendChild(opt);
+    });
+    if (!lineOf(target)) target = state.lists[0].id;
+    lineBox.value = target;
+    entry.style.setProperty('--hue', hue(target));
+    entry.style.setProperty('--hue-on', hueOn(target));
+  }
+
+  function render() {
+    renderLines();
+    renderPicker();
+
+    var rows = visible();
+
+    // Each stop's hue plus its neighbours', so the spine can fade between them
+    var hues = rows.map(function (t) {
+      return t.done ? 'var(--ink-faint)' : hue(t.list);
+    });
+
+    route.textContent = '';
+    rows.forEach(function (todo, i) {
+      var li = buildStop(todo, i);
+      li.style.setProperty('--hue', hues[i]);
+      li.style.setProperty('--prev', hues[i - 1] || hues[i]);
+      li.style.setProperty('--next', i + 1 < hues.length ? hues[i + 1] : hue(target));
+      if (todo.id === justAdded) li.classList.add('new-stop');
+      route.appendChild(li);
+    });
+    justAdded = null;
+
+    var here = filter === null ? null : lineOf(filter);
+    blank.textContent = here
+      ? 'Nothing in ' + here.name + ' yet. Add the first item below.'
+      : 'Nothing here yet. Add your first item below.';
+    blank.hidden = rows.length > 0;
+
+    countAll.textContent = rows.length;
+    countOpen.textContent = rows.filter(function (t) { return !t.done; }).length;
+
+    var late = rows.filter(isLate).length;
+    countLate.textContent = late + ' late';
+    countLate.hidden = late === 0;
+
+    if (firstPaint) {
+      firstPaint = false;
+      route.classList.add('drawing');
+      setTimeout(function () { route.classList.remove('drawing'); }, 1200);
+    }
+  }
+
+  // Flip the marker in place first, so the fill animates before the board
+  // re-sorts and the row moves.
+  function toggle(id) {
+    var todo = state.todos.find(function (t) { return t.id === id; });
+    if (!todo) return;
+    todo.done = !todo.done;
+    push('PATCH', '/api/todos/' + id, { done: todo.done });
+
+    var li = route.querySelector('[data-id="' + id + '"]');
+    if (!li) { render(); return; }
+
+    li.classList.toggle('done', todo.done);
+    li.querySelector('.stop').setAttribute('aria-checked', todo.done ? 'true' : 'false');
+    setTimeout(render, 360);
+  }
+
+  function remove(id) {
+    state.todos = state.todos.filter(function (t) { return t.id !== id; });
+    push('DELETE', '/api/todos/' + id);
+    render();
+  }
+
+  // ---- New item ------------------------------------------------------------
+  entry.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var text = taskBox.value.trim();
+    if (!text) return;                       // ignore blank / whitespace-only entries
+
+    var draft = {
+      text: text,
+      due: cleanDue(dueBox.value),
+      place: cleanPlace(placeBox.value),
+      list: target
+    };
+
+    taskBox.value = '';
+    dueBox.value = '';
+    placeBox.value = '';
+    entry.classList.remove('ready');
+    taskBox.focus();
+
+    // The database assigns the id, so the row is drawn once it comes back
+    api('POST', '/api/todos', draft).then(function (row) {
+      settled();
+      state.todos.push(row);
+      justAdded = row.id;
+      render();
+    }, trouble);
+  });
+
+  taskBox.addEventListener('input', function () {
+    entry.classList.toggle('ready', taskBox.value.trim().length > 0);
+  });
+
+  lineBox.addEventListener('change', function () {
+    target = Number(lineBox.value);
+    entry.style.setProperty('--hue', hue(target));
+    entry.style.setProperty('--hue-on', hueOn(target));
+    render();
+  });
+
+  // ---- Boot ----------------------------------------------------------------
+  api('GET', '/api/state').then(function (s) {
+    state = s;
+    if (!state.lists.length) throw new Error('the database has no lists');
+    target = state.lists[0].id;
+    settled();
+    render();
+  }, function (err) {
+    strip.hidden = false;
+    strip.textContent = 'Could not reach the server — start it with "python server.py" in the todo folder, then reload.';
+    blank.textContent = 'Waiting for the server.';
+    blank.hidden = false;
+  });
+})();
+</script>
+</body>
+</html>
